@@ -1,5 +1,17 @@
-<main>
-  <h2><%= message.user%></h2>
-  <p><%= message.text%></p>
-  <p><%= message.added%></p>
-</main>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Message Board</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <main class="msg">
+      <h2><%= message.user%></h2>
+      <p><%= message.text%></p>
+      <p><%= message.added%></p>
+      <a href="/">Back to home</a>
+    </main>
+  </body>
+</html>

@@ -4,12 +4,13 @@
     <title>Message Board</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
   </head>
   <body>
     <a href="/new">Post new message</a>
     <main>
       <% messages.forEach((message) => { %>
-        <div>
+        <div class="msg">
           <h2><%= message.user%></h2>
           <p><%= message.text%></p>
           <p><%= message.added%></p>
