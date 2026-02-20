@@ -3,21 +3,15 @@ const { body, validationResult } = require("express-validator");
 const db = require("../db/queries");
 const indexRouter = Router();
 
-const alphaErr = "must only contain letters.";
-
 const validateUser = [
   body("author")
     .trim()
-    .isAlpha()
-    .withMessage(`author ${alphaErr}`)
     .isLength({ min: 1, max: 20 })
     .withMessage("author must be between 1 and 20 characters"),
   body("message")
     .trim()
-    .isAlpha()
-    .withMessage(`message ${alphaErr}`)
     .isLength({ min: 1, max: 200 })
-    .withMessage("Message must be between 1 and 200 characters lonh"),
+    .withMessage("Message must be between 1 and 200 characters long"),
 ];
 
 indexRouter.get("/", async (req, res) => {
