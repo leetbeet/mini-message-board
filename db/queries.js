@@ -1,5 +1,9 @@
 const pool = require("./pool");
 
+async function getAllMessages() {
+  return await pool.query("SELECT * FROM messages");
+}
+
 async function addMessage(author, message) {
   const query =
     "INSERT INTO messages (text, user, added) VALUES ($1, $2, NOW())";
@@ -12,6 +16,7 @@ async function findMessage(id) {
 }
 
 module.exports = {
+  getAllMessages,
   addMessage,
   findMessage,
 };
