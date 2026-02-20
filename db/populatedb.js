@@ -6,11 +6,11 @@ const SQL = `
 CREATE TABLE IF NOT EXISTS messages (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   text VARCHAR ( 255 ),
-  user VARCHAR ( 255 ),
+  "user" VARCHAR ( 255 ),
   added DATE
 );
 
-INSERT INTO messages (text, user, added) 
+INSERT INTO messages (text, "user", added) 
 VALUES
   ('Hi there!', 'Amando', Now()),
   ('Hello World!', 'Charles', Now());

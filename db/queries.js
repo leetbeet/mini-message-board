@@ -5,8 +5,7 @@ async function getAllMessages() {
 }
 
 async function addMessage(author, message) {
-  const query =
-    "INSERT INTO messages (text, user, added) VALUES ($1, $2, NOW())";
+  const query = `INSERT INTO messages (text, "user", added) VALUES ($1, $2, NOW())`;
   const values = [message, author];
   await pool.query(query, values);
 }
