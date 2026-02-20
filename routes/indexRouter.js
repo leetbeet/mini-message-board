@@ -14,36 +14,53 @@ const validateUser = [
     .withMessage("Message must be between 1 and 200 characters long"),
 ];
 
-indexRouter.get("/", async (req, res) => {
-  const result = await db.getAllMessages();
-  res.render("index", { messages: result.rows });
-});
-indexRouter.get("/new", (req, res) => res.render("form"));
-indexRouter.post("/new", validateUser, async (req, res) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return res.status(400).render("form", {
-      errors: errors.array(),
-    });
+indexRouter.get("/", async (req, res, next) => {
+  try {
+    const result = await db.getAllMessages();
+    res.render("index", { messages: result.rows });
+  } catch (err) {
+    next(err);
   }
-
-  const { message, author } = req.body;
-
-  await db.addMessage(author, message);
-
-  res.redirect("/");
 });
-indexRouter.get("/:id", async (req, res) => {
-  const { id } = req.params;
 
-  const message = await db.findMessage(id);
+indexRouter.get("/new", (req, res) => {
+  res.render("form");
+});
 
-  if (message.rows.length === 0) {
-    return res.status(404).send("Message not found");
+indexRouter.post("/new", validateUser, async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).render("form", {
+        errors: errors.array(),
+      });
+    }
+
+    const { message, author } = req.body;
+
+    await db.addMessage(author, message);
+
+    res.redirect("/");
+  } catch (err) {
+    next(err);
   }
+});
 
-  res.render("message", { message: message.rows[0] });
+indexRouter.get("/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const message = await db.findMessage(id);
+
+    if (message.rows.length === 0) {
+      return res.status(404).send("Message not found");
+    }
+
+    res.render("message", { message: message.rows[0] });
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = indexRouter;
