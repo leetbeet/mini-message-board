@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const { body, validationResult } = require("express-validator");
+const db = require("../db/queries");
 const indexRouter = Router();
 
 const alphaErr = "must only contain letters.";
@@ -19,9 +20,12 @@ const validateUser = [
     .withMessage("Message must be between 1 and 200 characters lonh"),
 ];
 
-indexRouter.get("/", (req, res) => res.render("index", { messages }));
+indexRouter.get("/", async (req, res) => {
+  const result = await db.getAllMessages();
+  res.render("index", { messages: result.rows });
+});
 indexRouter.get("/new", (req, res) => res.render("form"));
-indexRouter.post("/new", validateUser, (req, res) => {
+indexRouter.post("/new", validateUser, async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -32,23 +36,20 @@ indexRouter.post("/new", validateUser, (req, res) => {
 
   const { message, author } = req.body;
 
-  messages.push({
-    id: ++nextId,
-    text: message,
-    user: author,
-    added: new Date(),
-  });
+  await db.addMessage(author, message);
 
   res.redirect("/");
 });
-indexRouter.get("/:id", (req, res) => {
-  const message = messages.find((m) => m.id === Number(req.params.id));
+indexRouter.get("/:id", async (req, res) => {
+  const { id } = req.params;
 
-  if (!message) {
+  const message = await db.findMessage(id);
+
+  if (message.rows.length === 0) {
     return res.status(404).send("Message not found");
   }
 
-  res.render("message", { message });
+  res.render("message", { message: message.rows[0] });
 });
 
 module.exports = indexRouter;
